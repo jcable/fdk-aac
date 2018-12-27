@@ -478,6 +478,18 @@ static void FDKaacEnc_MapConfig(CODER_CONFIG *const cc,
       transport_AOT = AOT_SBR;
       cc->flags |= CC_SBR;
       break;
+    case AOT_DRM_AAC:
+      transport_AOT = AOT_SBR;
+      cc->flags |= CC_VCB11 | CC_HCR;
+      break;
+    case AOT_DRM_SBR:
+      transport_AOT = AOT_SBR;
+      cc->flags |= CC_SBR | CC_VCB11 | CC_HCR;
+      break;
+    case AOT_DRM_MPEG_PS:
+      transport_AOT = AOT_PS;
+      cc->flags |= CC_SBR | CC_VCB11 | CC_HCR;
+      break;
     default:
       transport_AOT = hAacConfig->audioObjectType;
   }
@@ -968,6 +980,18 @@ static AACENC_ERROR FDKaacEnc_AdjustEncSettings(HANDLE_AACENCODER hAacEncoder,
           hAacConfig->framelength != 128 && hAacConfig->framelength != 120) {
         return AACENC_INVALID_CONFIG;
       }
+      break;
+    case AOT_DRM_AAC:
+      hAacConfig->syntaxFlags |= AC_ER | AC_ER_VCB11 | AC_ER_HCR;
+      hAacConfig->framelength = 960;
+      break;
+    case AOT_DRM_SBR:
+      hAacConfig->syntaxFlags |= AC_ER | AC_ER_VCB11 | AC_ER_HCR | AC_SBR_PRESENT;
+      hAacConfig->framelength = 960;
+      break;
+    case AOT_DRM_MPEG_PS:
+      hAacConfig->syntaxFlags |= AC_ER | AC_ER_VCB11 | AC_ER_HCR | AC_SBR_PRESENT;
+      hAacConfig->framelength = 960;
       break;
     default:
       break;
@@ -2061,7 +2085,7 @@ AACENC_ERROR aacEncGetLibInfo(LIB_INFO *info) {
   LIB_VERSION_STRING(&info[i]);
 
   /* Capability flags */
-  info[i].flags = 0 | CAPF_AAC_1024 | CAPF_AAC_LC | CAPF_AAC_512 |
+  info[i].flags = 0 | CAPF_AAC_1024 | CAPF_AAC_960 | CAPF_AAC_LC | CAPF_AAC_512 |
                   CAPF_AAC_480 | CAPF_AAC_DRC | CAPF_AAC_ELD_DOWNSCALE;
   /* End of flags */
 
@@ -2104,6 +2128,10 @@ AACENC_ERROR aacEncoder_SetParam(const HANDLE_AACENCODER hAacEncoder,
               err = AACENC_INVALID_CONFIG;
               goto bail;
             }
+            break;
+          case AOT_DRM_AAC:
+          case AOT_DRM_SBR:
+          case AOT_DRM_MPEG_PS:
             break;
           default:
             err = AACENC_INVALID_CONFIG;
@@ -2215,6 +2243,7 @@ AACENC_ERROR aacEncoder_SetParam(const HANDLE_AACENCODER hAacEncoder,
       if (settings->userFramelength != value) {
         switch (value) {
           case 1024:
+          case 960:
           case 512:
           case 480:
           case 256:
