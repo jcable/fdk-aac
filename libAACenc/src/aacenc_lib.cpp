@@ -908,6 +908,7 @@ static AACENC_ERROR FDKaacEnc_AdjustEncSettings(HANDLE_AACENCODER hAacEncoder,
 
   if (config->userTpType == TT_MP4_LATM_MCP1 ||
       config->userTpType == TT_MP4_LATM_MCP0 ||
+      config->userTpType == TT_DRM ||
       config->userTpType == TT_MP4_LOAS) {
     hAacConfig->audioMuxVersion = config->userTpAmxv;
   } else {
@@ -2296,6 +2297,7 @@ AACENC_ERROR aacEncoder_SetParam(const HANDLE_AACENCODER hAacEncoder,
               ((type == TT_MP4_LATM_MCP1) &&
                ((flags & CAPF_LATM) && (flags & CAPF_RAWPACKETS))) ||
               ((type == TT_MP4_LOAS) && (flags & CAPF_LOAS)) ||
+              ((type == TT_DRM) && (flags & CAPF_DRM)) ||
               ((type == TT_MP4_RAW) && (flags & CAPF_RAWPACKETS)))) {
           err = AACENC_INVALID_CONFIG;
           break;

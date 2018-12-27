@@ -445,10 +445,10 @@ AAC_ENCODER_ERROR FDKaacEnc_Initialize(
   }
 
   if (config->syntaxFlags & AC_ER_VCB11) {
-    return AAC_ENC_UNSUPPORTED_ER_FORMAT;
+    return AAC_ENC_UNSUPPORTED_ER_FORMAT; // TODO
   }
   if (config->syntaxFlags & AC_ER_HCR) {
-    return AAC_ENC_UNSUPPORTED_ER_FORMAT;
+    return AAC_ENC_UNSUPPORTED_ER_FORMAT; // TODO
   }
 
   /* check frame length */

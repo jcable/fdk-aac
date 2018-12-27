@@ -311,6 +311,9 @@ TRANSPORTENC_ERROR transportEnc_Init(HANDLE_TRANSPORTENC hTpEnc,
       hTpEnc->writer.raw.curSubFrame = 0;
       hTpEnc->writer.raw.nSubFrames = hTpEnc->config.nSubFrames;
       break;
+    case TT_DRM:
+      // TODO
+      break;
 
     default:
       return TRANSPORTENC_INVALID_PARAMETER;
@@ -657,7 +660,7 @@ TRANSPORTENC_ERROR transportEnc_GetLibInfo(LIB_INFO *info) {
 
   /* Set flags */
   info->flags =
-      0 | CAPF_ADIF | CAPF_ADTS | CAPF_LATM | CAPF_LOAS | CAPF_RAWPACKETS;
+      0 | CAPF_DRM | CAPF_ADIF | CAPF_ADTS | CAPF_LATM | CAPF_LOAS | CAPF_RAWPACKETS; // TODO make CAPF_DRM true!
 
   return TRANSPORTENC_OK;
 }
